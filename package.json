@@ -1,0 +1,46 @@
+{
+	"name": "glitchin",
+	"version": "0.1.0",
+	"description": "Glitch Art package",
+	"keywords": [
+		"glitch",
+		"art"
+	],
+	"main": "./lib/glitchin",
+	"bin": {
+		"glitchin": "./bin/glitchin"
+	},
+	"maintainers": [
+		{
+			"name": "the_mouse_house",
+			"email": "piosko@themousehouse.pl"
+		}
+	],
+	"directories": {},
+	"scripts": {
+		"test": "test"
+	},
+	"author": {
+		"name": "Piotr Skonieczny",
+		"email": "piosko@themousehouse.pl",
+		"url": "http://themousehouse.pl/"
+	},
+	"homepage": "https://github.com/TheMouseHouse/glitchin",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/TheMouseHouse/glitchin.git"
+	},
+	"bugs": {
+		"url": "https://github.com/TheMouseHouse/glitchin/issues"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"bluebird": "^3.3.3",
+		"colors": "^1.1.2",
+		"expect": "^1.14.0",
+		"jimp": "^0.2.21",
+		"lodash": "^4.6.0",
+		"mkdirp": "^0.5.1",
+		"nomnom": "^1.8.1"
+	}
+}
