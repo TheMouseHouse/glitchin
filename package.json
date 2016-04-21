@@ -1,6 +1,6 @@
 {
   "name": "glitchin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Glitch Art package",
   "keywords": [
     "glitch",
@@ -28,7 +28,7 @@
   "homepage": "https://github.com/TheMouseHouse/glitchin",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheMouseHouse/glitchin.git"
+    "url": "https://github.com/TheMouseHouse/glitchin.git"
   },
   "bugs": {
     "url": "https://github.com/TheMouseHouse/glitchin/issues"
@@ -36,6 +36,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.3.3",
+    "colors": "^1.1.2",
     "expect": "^1.14.0",
     "jimp": "^0.2.21",
     "lodash": "^4.8.2",
