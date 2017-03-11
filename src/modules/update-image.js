@@ -2,10 +2,10 @@
 
 var _ = require('lodash');
 
-module.exports = function (image) {
+module.exports = function( image ){
 	var index = 0;
 
-	_.each(image.input, function (pixel) {
+	_.each(image.input, function( pixel ){
 		image.bitmap.data[index] = pixel.r;
 		image.bitmap.data[index + 1] = pixel.g;
 		image.bitmap.data[index + 2] = pixel.b;
@@ -14,5 +14,5 @@ module.exports = function (image) {
 	});
 	image.write(output);
 
-	callback && callback(output);
+	(callback && callback(output));
 };

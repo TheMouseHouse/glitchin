@@ -18,7 +18,8 @@
   ],
   "directories": {},
   "scripts": {
-    "test": "grunt test"
+    "build": "babel src -d lib",
+    "dev": "babel src -w -d lib"
   },
   "author": {
     "name": "Piotr Skonieczny",
@@ -35,13 +36,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.3.3",
-    "colors": "^1.1.2",
-    "debug": "^2.2.0",
-    "expect": "^1.14.0",
-    "jimp": "^0.2.21",
-    "lodash": "^4.8.2",
-    "mkdirp": "^0.5.1",
-    "nomnom": "^1.8.1"
+    "bluebird": "^3.5.0",
+    "jimp": "^0.2.27",
+    "lodash": "^4.17.4",
+    "nomnom": "^1.8.1",
+    "rxjs": "^5.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-preset-env": "^1.2.1"
   }
 }
