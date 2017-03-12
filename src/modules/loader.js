@@ -29,7 +29,7 @@ export class Loader {
 				throw `File type not supported - ${ext}`;
 			}
 
-			return image;// Process( image );
+			return Process( image );
 		} ).catch( error => console.error );
 	}
 };
