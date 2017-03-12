@@ -1,51 +1,46 @@
 import { each, isUndefined, isNull } from 'lodash';
 import { Promise } from 'bluebird';
-import { Render } from './render';
 import { Pixel } from './pixel';
 
-export class Process {
-	constructor( image ) {
-		return new Promise(( resolve, reject ) => {
-			if ( isUndefined( image ) || isNull( image ) ) {
-				reject();
-			}
+export function Process( image ) {
 
-			var data = image.bitmap.data,
-				width = image.bitmap.width,
-				height = image.bitmap.height,
+	return new Promise(( resolve, reject ) => {
+		if ( isUndefined( image ) || isNull( image ) ) {
+			reject();
+		}
 
-				glitch = {
-					image: image,
-					data: [],
-					rows: [],
-					columns: [],
-					width: width,
-					height: height
-				};
+		var data = image.bitmap.data,
+			width = image.bitmap.width,
+			height = image.bitmap.height,
 
-			image.scan( 0, 0, width, height, ( x, y, idx ) => {
-				var pixel = new Pixel( x, y, idx, data );
-				glitch.data.push( pixel );
-
-				if ( isUndefined( glitch.rows[ y ] ) ) {
-					glitch.rows[ y ] = [];
-				}
-
-				if ( isUndefined( glitch.columns[ x ] ) ) {
-					glitch.columns[ x ] = [];
-				}
-
-				glitch.rows[ y ].push( pixel );
-				glitch.columns[ x ].push( pixel );
-			} );
-
-			image.glitch = glitch;
-
-			image.render = ( output ) => {
-				return Render( image, output );
+			glitch = {
+				image: image,
+				data: [],
+				rows: [],
+				columns: [],
+				width: width,
+				height: height
 			};
 
-			resolve( image );
-		} ).catch( error => console.error );
-	}
+		image.scan( 0, 0, width, height, ( x, y, idx ) => {
+			var pixel = new Pixel( x, y, idx, data );
+			glitch.data.push( pixel );
+
+			if ( isUndefined( glitch.rows[ y ] ) ) {
+				glitch.rows[ y ] = [];
+			}
+
+			if ( isUndefined( glitch.columns[ x ] ) ) {
+				glitch.columns[ x ] = [];
+			}
+
+			glitch.rows[ y ].push( pixel );
+			glitch.columns[ x ].push( pixel );
+		} );
+
+		image.glitch = glitch;
+
+		resolve( image );
+	} ).catch( error => console.error );
+
 };

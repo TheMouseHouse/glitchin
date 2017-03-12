@@ -1,7 +1,7 @@
 import { each, isUndefined, isNull } from 'lodash';
 import { Promise } from 'bluebird';
 import { Process } from './process';
-import * as Jimp from 'jimp';
+import Jimp from 'jimp';
 
 export class Loader {
 	constructor( file ) {
@@ -32,7 +32,7 @@ export class Loader {
 				throw `File type not supported - ${ext}`;
 			}
 
-			return new Process( image );
+			return Process( image );
 		} ).catch( error => console.error );
 	}
 };

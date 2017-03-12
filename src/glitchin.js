@@ -1,92 +1,49 @@
 import 'babel-polyfill';
 import { each, isUndefined } from 'lodash';
-import * as Jimp from 'jimp';
+import Jimp from 'jimp';
 import { Promise } from 'bluebird';
 import { Loader } from './modules/loader';
-
-
-function makeAPI( image ) {
-	image.render = ( output ) => {
-		// return require( './modules/render' )( image, output );
-		return render( image, output );
-	};
-
-	// image.rows = function ( rows ) {
-	// 	return require( './modules/rows' )( image, rows );
-	// };
-
-	// image.columns = function ( columns ) {
-	// 	return require( './modules/columns' )( image, columns );
-	// };
-
-	// image.dataToRows = function () {
-	// 	return require( './modules/data-to-rows' )( image );
-	// };
-
-	// image.dataToColumns = function () {
-	// 	return require( './modules/data-to-columns' )( image );
-	// };
-
-	// image.rowsToData = function () {
-	// 	return require( './modules/rows-to-data' )( image );
-	// };
-
-	// image.columnsToData = function () {
-	// 	return require( './modules/columns-to-data' )( image );
-	// };
-
-	// image.simpleRowSort = function () {
-	// 	return require( './filters/simple-sort-row' )( image );
-	// };
-
-	// image.simpleColumnSort = function () {
-	// 	return require( './filters/simple-sort-column' )( image );
-	// };
-
-	// image.offsetRows = function ( offset ) {
-	// 	return require( './filters/offset-rows' )( image, offset );
-	// };
-
-	// image.offsetColumns = function ( offset ) {
-	// 	return require( './filters/offset-columns' )( image, offset );
-	// };
-
-	// image.custom = function ( customSortFunc ) {
-	// 	return customSortFunc( image );
-	// };
-
-	return image;
-}
+import { Render } from './modules/render';
 
 export class Glitchin {
-
-	constructor( config ) {
-		if ( isUndefined( config ) ) {
+	constructor( layers, config ) {
+		if ( isUndefined( layers ) || isUndefined( config ) ) {
 			return;
 		}
 
+		this.promises = [];
 		this.layers = [];
 
-		each( config, c => {
-			console.log( c.file, c.opacity );
-
-			this.layers.push(
-				new Promise(( resolve, reject ) => {
-					new Loader( c.file ).then( image => {
-						resolve( image );
-					} ).catch( error => {
-						console.error( error );
-						resolve( error );
-					} );
-				} )
-			);
+		each( layers, ( layer, index ) => {
+			if ( layer.opacity > 0 ) {
+				this.promises.push(
+					new Promise(( resolve, reject ) => {
+						new Loader( layer.file ).then( jimp => {
+							this.layers[ index ] = { params: layer, jimp: jimp };
+							resolve();
+						} ).catch( error => {
+							console.error( error );
+							resolve( error );
+						} );
+					} )
+				);
+			}
 		} );
 
 		Promise.all( this.layers ).then(() => {
-			console.log( 'All done. Layers length: ', this.layers.length );
-			console.log( this.layers[ 0 ] );
+			console.log( 'Images loaded. Glitching...' );
+			Promise.all( this.promises, () => {
+				let output = new Jimp( this.layers[ 0 ].bitmap.width, this.layers[ 0 ].bitmap.height, ( error, image ) => {
+					if ( !!error ) {
+						return;
+					}
+					each( this.layers.reverse(), layer => {
+						image.opacity( layer.layer.opacity / 100 );
+						image.composite( layer.bitmap, 0, 0 );
+					} );
+					Render( image, config.output );
+				} )
+			} );
 		} );
 	}
 }
-
-// module.exports = Glitchin_;

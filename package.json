@@ -18,7 +18,7 @@
   ],
   "directories": {},
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "set BABEL_ENV=production && rimraf lib && babel src -d lib",
     "dev": "babel src -w -d lib"
   },
   "author": {
@@ -45,6 +45,7 @@
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-polyfill": "^6.23.0",
+    "babel-preset-babili": "0.0.12",
     "babel-preset-env": "^1.2.1"
   }
 }
