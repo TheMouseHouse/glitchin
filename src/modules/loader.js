@@ -5,9 +5,6 @@ import Jimp from 'jimp';
 
 export class Loader {
 	constructor( file ) {
-		// each( opts, ( value, key ) => {
-		// 	options[ key ] = value;
-		// } );
 
 		if ( isUndefined( file ) ) {
 			return;
@@ -32,7 +29,7 @@ export class Loader {
 				throw `File type not supported - ${ext}`;
 			}
 
-			return Process( image );
+			return image;// Process( image );
 		} ).catch( error => console.error );
 	}
 };

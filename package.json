@@ -18,8 +18,8 @@
   ],
   "directories": {},
   "scripts": {
-    "build": "set BABEL_ENV=production && rimraf lib && babel src -d lib",
-    "dev": "babel src -w -d lib"
+    "build": "set NODE_ENV=production&& rimraf lib && babel src -d lib",
+    "dev": "set NODE_ENV=development&& rimraf lib && babel src -w -d lib"
   },
   "author": {
     "name": "Piotr Skonieczny",

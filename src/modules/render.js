@@ -1,19 +1,26 @@
-import { each, isUndefined, isNull } from 'lodash';
+import { each, has, isUndefined, isNull } from 'lodash';
 import { Promise } from 'bluebird';
 
 export function Render( image, output ) {
+	console.log( 'Rendering...' );
 
-	var index = 0,
-		glitch = image.glitch.data,
-		bitmap = image.bitmap.data;
+	let index = 0,
+		bitmap = image.bitmap.data,
+		glitch = null;
 
-	each( glitch, ( pixel ) => {
-		bitmap[ index ] = pixel.r;
-		bitmap[ index + 1 ] = pixel.g;
-		bitmap[ index + 2 ] = pixel.b;
-		bitmap[ index + 3 ] = pixel.a;
-		index += 4;
-	} );
+	if ( has( image, 'glitch' ) ) {
+		glitch = image.glitch.data;
+	}
+
+	if ( !isNull( glitch ) ) {
+		each( glitch, ( pixel ) => {
+			bitmap[ index ] = pixel.r;
+			bitmap[ index + 1 ] = pixel.g;
+			bitmap[ index + 2 ] = pixel.b;
+			bitmap[ index + 3 ] = pixel.a;
+			index += 4;
+		} );
+	}
 
 	if ( output !== 'base64' ) {
 		image.write( output );
