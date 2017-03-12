@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.2.1"
   }
 }

@@ -1,10 +1,8 @@
-import { each, isUndefined, isNull } from 'lodash';
-import { options } from './options';
+import 'babel-polyfill';
+import { each, isUndefined } from 'lodash';
 import * as Jimp from 'jimp';
-import { Pixel } from './modules/pixel';
 import { Promise } from 'bluebird';
-
-import { Render } from './modules/render';
+import { Loader } from './modules/loader';
 
 
 function makeAPI( image ) {
@@ -60,78 +58,35 @@ function makeAPI( image ) {
 	return image;
 }
 
-function processBuffer( image ) {
-	return new Promise(( resolve, reject ) => {
-		if ( isUndefined( image ) || isNull( image ) ) {
-			reject();
+export class Glitchin {
+
+	constructor( config ) {
+		if ( isUndefined( config ) ) {
+			return;
 		}
 
-		var data = image.bitmap.data,
-			width = image.bitmap.width,
-			height = image.bitmap.height,
+		this.layers = [];
 
-			glitch = {
-				image: image,
-				data: [],
-				rows: [],
-				columns: [],
-				width: width,
-				height: height
-			};
+		each( config, c => {
+			console.log( c.file, c.opacity );
 
-		image.scan( 0, 0, width, height, ( x, y, idx ) => {
-			var pixel = new Pixel( x, y, idx, data );
-			glitch.data.push( pixel );
-
-			if ( isUndefined( glitch.rows[ y ] ) ) {
-				glitch.rows[ y ] = [];
-			}
-
-			if ( isUndefined( glitch.columns[ x ] ) ) {
-				glitch.columns[ x ] = [];
-			}
-
-			glitch.rows[ y ].push( pixel );
-			glitch.columns[ x ].push( pixel );
+			this.layers.push(
+				new Promise(( resolve, reject ) => {
+					new Loader( c.file ).then( image => {
+						resolve( image );
+					} ).catch( error => {
+						console.error( error );
+						resolve( error );
+					} );
+				} )
+			);
 		} );
 
-		image.glitch = glitch;
-
-		image.render = ( output ) => {
-			return Render( image, output );
-		};
-
-		resolve( image );
-	} ).catch( error => console.error );
-
+		Promise.all( this.layers ).then(() => {
+			console.log( 'All done. Layers length: ', this.layers.length );
+			console.log( this.layers[ 0 ] );
+		} );
+	}
 }
 
-export function Glitchin( file, opts ) {
-	each( opts, ( value, key ) => {
-		options[ key ] = value;
-	} );
-
-	return Jimp.read( file ).then( image => {
-		let mime;
-
-		try {
-			const ext = file.substr( -4, 4 );
-
-			if ( ext === '.jpg' || ext === 'jpeg' ) {
-				mime = Jimp.MIME_JPEG;
-			} else if ( ext === '.png' ) {
-				mime = Jimp.MIME_PNG;
-			} else if ( ext === '.bmp' ) {
-				mime = Jimp.MIME_BMP;
-			}
-		} catch ( e ) {
-			mime = options.mime;
-		} finally {
-			image.bitmap.mime = mime;
-		}
-
-		return processBuffer( image );
-	} ).catch( error => console.error );
-}
-
-module.exports = Glitchin;
+// module.exports = Glitchin_;
