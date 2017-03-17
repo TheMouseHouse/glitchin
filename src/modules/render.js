@@ -23,7 +23,9 @@ export function Render( image, output ) {
 	}
 
 	if ( output !== 'base64' ) {
+		const fileSring = output;
 		image.write( output );
+		console.log( 'Done.' );
 	} else {
 		return new Promise(( resolve, reject ) => {
 			if ( isUndefined( image ) || isNull( image ) ) {

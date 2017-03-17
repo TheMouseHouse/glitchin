@@ -1,42 +1,33 @@
-'use strict';
+import Constants from '../config/constants';
+import { map, set, unset, isUndefined, isNull } from 'lodash';
 
-var _     = require('lodash'),
-	Const = require('../config/constants'),
-	debug = require('debug'),
-	error = debug('app:error');
+export class Channels {
+	static getChannel( target, key ) {
+		if ( isUndefined( target ) || isNull( target ) ) {
+			console.error( 'Unable to get channel from target: target undefined.' );
+			return [];
+		}
+		if ( isUndefined( key ) ) {
+			console.error( 'Unable to get channel from target: key undefined.' );
+			return [];
+		}
 
-function getChannel( target, key ){
-	if( _.isUndefined(target) || _.isNull(target) ){
-		error('Unable to get channel from target: target undefined.');
-		return [];
+		return target[ Constants.CHANNELS ][ key ];
 	}
-	if( _.isUndefined(key) ){
-		error('Unable to get channel from target: key undefined.');
-		return [];
+
+	static mapChannel( arr, key ) {
+		return map( arr, function ( item ) {
+			return map( item, function ( pixel ) {
+				return pixel[ key ];
+			} );
+		} );
 	}
 
-	return target[Const.CHANNELS][key];
-}
+	static defineChannels( target ) {
+		set( target, Constants.CHANNELS, {} );
+	}
 
-function mapChannel( arr, key ){
-	return _.map(arr, function( item ){
-		return _.map(item, function( pixel ){
-			return pixel[key];
-		});
-	});
+	static deleteChannels( target ) {
+		unset( target, Constants.CHANNELS );
+	}
 }
-
-function defineChannels( target ){
-	_.set(target, Const.CHANNELS, {});
-}
-
-function deleteChannels( target ){
-	_.unset(target, Const.CHANNELS);
-}
-
-module.exports = {
-	defineChannels: defineChannels,
-	deleteChannels: deleteChannels,
-	getChannel:     getChannel,
-	mapChannel:     mapChannel
-};

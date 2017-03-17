@@ -1,34 +1,32 @@
 'use strict';
+import { each, set, includes } from 'lodash';
+import Constants from '../config/constants';
+import Utils from '../modules/utils';
 
-var _              = require('lodash'),
-	Const          = require('../config/constants'),
-	Utils          = require('../modules/utils'),
-	OffsetInColumn = require('../modules/offset-in-column'),
-	debug          = require('debug')('filter/offset-columns');
+var OffsetInColumn = require( '../modules/offset-in-column' ),
+	debug = require( 'debug' )( 'filter/offset-columns' );
 
-module.exports = function( image, offset ){
-	Utils.check.image(image, 'Offset Columns');
+export function OffsetRgbCols( image, offset ) {
+	Utils.check.image( image, 'Offset Columns' );
 
-	if( !Utils.hasRgbParameter(offset, image.bitmap.height) ){
+	if ( !Utils.hasRgbParameter( offset, image.bitmap.height ) ) {
 		offset = Utils.createRgbParameters();
 	}
 
-	debug('Offsetting columns...');
-
 	try {
-		Utils.defineChannels(image);
+		Utils.defineChannels( image );
 
-		_.each(offset, function( value, key ){
-			_.set(image[Const.CHANNELS], key, Utils.mapChannel(image.glitch.columns, key));
+		each( offset, ( value, key ) => {
+			set( image[ Constants.CHANNELS ], key, Utils.mapChannel( image.glitch.columns, key ) );
 
-			if( _.includes(Const.POSSIBLE_CHANNELS, key) ){
-				image = OffsetInColumn(image, key, value);
+			if ( includes( Constants.POSSIBLE_CHANNELS, key ) ) {
+				image = OffsetInColumn( image, key, value );
 			}
-		});
+		} );
 
-		Utils.deleteChannels(image);
-	} catch( e ){
-		debug('Error offsetting columns. Attempting to continue. ' + e);
+		Utils.deleteChannels( image );
+	} catch ( e ) {
+		debug( 'Error offsetting columns. Attempting to continue. ' + e );
 	}
 
 	return image;

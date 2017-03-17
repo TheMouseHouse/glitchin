@@ -1,20 +1,18 @@
 import { each, isUndefined, isNull } from 'lodash';
 import { Promise } from 'bluebird';
-import { Process } from './process';
-import Jimp from 'jimp';
 
-export class Loader {
+export class Effects {
 	constructor( layer ) {
 
-		if ( isUndefined( layer ) || isUndefined( layer.file ) ) {
+		if ( isUndefined( layer ) ) {
 			return;
 		}
 
-		return Jimp.read( layer.file ).then( image => {
+		return Jimp.read( file ).then( image => {
 			let mime;
 
 			try {
-				const ext = layer.file.substr( -4, 4 );
+				const ext = file.substr( -4, 4 );
 
 				if ( ext === '.jpg' || ext === 'jpeg' ) {
 					mime = Jimp.MIME_JPEG;
@@ -29,7 +27,7 @@ export class Loader {
 				throw `File type not supported - ${ext}`;
 			}
 
-			return Process( image, layer.effects );
+			return Process( image );
 		} ).catch( error => console.error );
 	}
 };

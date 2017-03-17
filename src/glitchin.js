@@ -1,5 +1,5 @@
 import 'babel-polyfill';
-import { each, isUndefined, isNull } from 'lodash';
+import { each, isUndefined, isNull, has } from 'lodash';
 import Jimp from 'jimp';
 import { Promise } from 'bluebird';
 import { Loader } from './modules/loader';
@@ -14,9 +14,11 @@ export function Glitchin( layers, config ) {
 	this.layers = [];
 
 	each( layers, ( layer, index ) => {
+		console.log( 'Loading', layer.file );
+
 		this.promises.push(
 			new Promise(( resolve, reject ) => {
-				new Loader( layer.file ).then( jimp => {
+				new Loader( layer ).then( jimp => {
 					this.layers[ index ] = { params: layer, jimp: jimp };
 					resolve();
 				} ).catch( error => {
@@ -28,7 +30,7 @@ export function Glitchin( layers, config ) {
 	} );
 
 	Promise.all( this.promises ).then(() => {
-		console.log( 'Images loaded. Glitching...' );
+		console.log( 'Compositing...' );
 
 		const bitmap = this.layers[ 0 ].jimp.bitmap;
 		let output = new Jimp( bitmap.width, bitmap.height, ( error, image ) => {
