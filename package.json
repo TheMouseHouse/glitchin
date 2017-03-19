@@ -18,8 +18,8 @@
   ],
   "directories": {},
   "scripts": {
-    "build": "set NODE_ENV=production&& rimraf lib && babel src -d lib",
-    "dev": "set NODE_ENV=development&& rimraf lib && babel src -w -d lib"
+    "build": "set NODE_ENV=production&& rimraf lib && tsc -w",
+    "dev": "set NODE_ENV=development&& rimraf lib && tsc -w"
   },
   "author": {
     "name": "Piotr Skonieczny",
@@ -38,14 +38,9 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "jimp": "^0.2.27",
-    "lodash": "^4.17.4",
-    "nomnom": "^1.8.1",
-    "rxjs": "^5.2.0"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-babili": "0.0.12",
-    "babel-preset-env": "^1.2.1"
+    "typescript": "^2.2.1"
   }
 }
