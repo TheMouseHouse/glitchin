@@ -4,7 +4,18 @@ import Render from './modules/render';
 import Pixel from './modules/pixel';
 import * as Promise from 'bluebird';
 import * as Jimp from 'jimp';
-import { Layer, Layers, LayerConfig, OutputConfig, GJimp, Glitch, JimpBitmap } from './config/types';
+import {
+	Layer,
+	Layers,
+	LayerConfig,
+	OutputConfig,
+	JimpLike,
+	GJimp,
+	Glimage,
+	Glitch,
+	JimpImage,
+	GlimageBitmap
+} from './config/types';
 
 export class Glitchin {
 
@@ -20,13 +31,13 @@ export class Glitchin {
 			console.log( 'Loading', layer.file, layer );
 
 			this._promises.push(
-				new Promise(( resolve: Function, reject: Function ) => {
-					Loader( layer ).then(( gjimp: GJimp ) => {
-						this._layers[ index ] = { params: layer, jimp: gjimp };
+				new Promise(( resolve: () => void, reject: ( error: string ) => void ) => {
+					Loader( layer ).then(( glimage: Glimage ) => {
+						this._layers[ index ] = { params: layer, glimage: glimage };
 						resolve();
-					} ).catch( error => {
+					} ).catch(( error: string ) => {
 						console.error( error );
-						resolve( error );
+						reject( error );
 					} );
 				} )
 			);
@@ -35,26 +46,26 @@ export class Glitchin {
 		Promise.all( this._promises ).then(() => {
 			console.log( 'Compositing...' );
 
-			let bitmap = ( this._layers[ 0 ].jimp as GJimp ).bitmap;
-			let output = new Jimp( bitmap.width, bitmap.height, ( error: string, image: GJimp ) => {
+			let bitmap = this._layers[ 0 ].glimage.bitmap;
+			let output = new Jimp( bitmap.width, bitmap.height, ( error: string, image: JimpImage ) => {
 				if ( !isNil( error ) ) { return; }
 
 				each( this._layers.reverse(), ( layer: Layer ) => {
 					if ( layer.params.opacity > 0 ) {
-						let layerJimp = layer.jimp as GJimp;
-						let layerGlitchData = layerJimp.glitch && layerJimp.glitch.data;
+						let glimage = layer.glimage;
+						let layerGlitchData = glimage.glitch && glimage.glitch.data;
 
 						if ( !!layerGlitchData ) {
 							let index = 0;
 
-							layerJimp.scan(
+							glimage.scan(
 								0, 0,
-								layerJimp.bitmap.width,
-								layerJimp.bitmap.height,
+								glimage.bitmap.width,
+								glimage.bitmap.height,
 
 								function ( x: number, y: number, idx: number ) {
 									const pixel = layerGlitchData[ index ];
-									let layerBitmapData = ( this.bitmap as JimpBitmap ).data;
+									let layerBitmapData = ( this.bitmap as GlimageBitmap ).data;
 
 									layerBitmapData[ idx + 0 ] = pixel.r;
 									layerBitmapData[ idx + 1 ] = pixel.g;
@@ -64,8 +75,8 @@ export class Glitchin {
 							);
 						}
 
-						layerJimp.opacity( layer.params.opacity / 100 );
-						image.composite( layerJimp, 0, 0 );
+						glimage.opacity( layer.params.opacity / 100 );
+						image.composite( glimage, 0, 0 );
 					}
 				} );
 

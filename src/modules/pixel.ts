@@ -9,7 +9,7 @@ export type GlitchPixel = {
 	hex: number;
 };
 
-export default function Pixel( x: number, y: number, idx: number, data: number[] ): GlitchPixel {
+export default function Pixel( x: number, y: number, idx: number, data: Buffer ): GlitchPixel {
 	return {
 		x: x,
 		y: y,

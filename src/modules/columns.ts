@@ -1,19 +1,23 @@
-import { each, isUndefined, isNull } from 'lodash';
+import { each, isNil } from 'lodash';
 import ColumnsToData from './columns-to-data';
 import DataToRows from './data-to-rows';
 import * as Jimp from 'jimp';
+import {
+	Glitch,
+	GlitchColumn
+} from '../config/types';
 
-export default function Columns( image: Jimp, columns ) {
-	if ( isUndefined( image ) || isNull( image ) ) {
+export default function Columns( glitch: Glitch, columns: GlitchColumn[] ): Glitch {
+	if ( isNil( glitch ) ) {
 		throw new Error( 'modules/columns: image undefined' );
 	}
-	if ( isUndefined( columns ) || isNull( columns ) ) {
+	if ( isNil( columns ) ) {
 		throw new Error( 'modules/columns: columns undefined' );
 	}
 
-	image.glitch.columns = columns;
-	image.glitch.data = ColumnsToData( image );
-	image.glitch.rows = DataToRows( image );
+	glitch.columns = columns;
+	glitch.data = ColumnsToData( glitch.columns );
+	glitch.rows = DataToRows( glitch );
 
-	return image;
+	return glitch;
 }

@@ -1,3 +1,4 @@
+/// <reference types="node" />
 export declare type GlitchPixel = {
     x: number;
     y: number;
@@ -8,4 +9,4 @@ export declare type GlitchPixel = {
     a: number;
     hex: number;
 };
-export default function Pixel(x: number, y: number, idx: number, data: number[]): GlitchPixel;
+export default function Pixel(x: number, y: number, idx: number, data: Buffer): GlitchPixel;

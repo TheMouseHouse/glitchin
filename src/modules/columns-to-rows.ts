@@ -1,12 +1,17 @@
-import { each, isUndefined } from 'lodash';
+import { each, isNil } from 'lodash';
 import * as Jimp from 'jimp';
+import {
+	GlitchRow,
+	GlitchColumn
+} from '../config/types';
+import { GlitchPixel } from '../modules/pixel';
 
-export default function ColumnsToData( image: Jimp ): any[] {
-	let rows = [];
+export default function ColumnsToData( columns: GlitchColumn[] ): GlitchRow[] {
+	let rows: GlitchRow[] = [];
 
-	each( image.glitch.columns, ( column, colIndex ) => {
-		each( column, ( pixel, pixelIndex ) => {
-			if ( isUndefined( rows[ pixelIndex ] ) ) {
+	each( columns, ( column: GlitchColumn, colIndex: number ) => {
+		each( column, ( pixel: GlitchPixel, pixelIndex: number ) => {
+			if ( isNil( rows[ pixelIndex ] ) ) {
 				rows[ pixelIndex ] = [];
 			}
 			rows[ pixelIndex ][ colIndex ] = pixel;

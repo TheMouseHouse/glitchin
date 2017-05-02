@@ -25,7 +25,7 @@ export type OutputConfig = {
 
 export type Layer = {
 	params: LayerConfig,
-	jimp: Jimp
+	glimage: Glimage
 };
 
 export type Layers = Layer[];
@@ -34,35 +34,91 @@ export type GlitchRow = GlitchPixel[];
 export type GlitchColumn = GlitchPixel[];
 
 export type Glitch = {
+	image: Glimage;
 	data: GlitchPixel[];
-	row: GlitchRow[];
+	rows: GlitchRow[];
 	columns: GlitchColumn[];
+	width: number;
+	height: number;
+	channels?: { r: number[], g: number[], b: number[] };
 };
 
-export type GJimp = {
-	read( file: string, callback?: ( error: string, image: Jimp ) => void ): Promise<Jimp>;
-	write( path: string, callback?: ( error: string ) => void ): void;
+export type GlimageBitmap = JimpImageBitmap & {
+	mime?: string;
+};
+
+export type Glimage = JimpImage & {
+	glitch: Glitch;
+	bitmap: GlimageBitmap;
+};
+
+export type JimpImage = {
+	bitmap: JimpImageBitmap;
+
 	scan( x: number, y: number, width: number, height: number, callback: ( x: number, y: number, idx: number ) => void ): void;
+	write( path: string, callback?: ( error: string ) => void ): void;
 	getBuffer( mime, callback: ( image: Buffer ) => void ): void;
 	getBase64( mime, callback: ( base64: string ) => void ): void;
-	clone(): Jimp;
-	convolution( matrix: JimpMatrix ): void;
 	quality( n: number ): void;
 	rgba( bool: boolean ): void;
 	filterType( value: number ): void;
 	deflateLevel( value: number ): void;
-	deflateStrategy( value: number ): void;
+	convolution( matrix: JimpMatrix ): void;
 	getPixelColor( x: number, y: number ): number;
 	setPixelColor( hex: number, x: number, y: number ): void;
-	rgbaToInt( r: number, g: number, b: number, a: number ): number;
-	intToRGBA( hex: number ): { r: number, g: number, b: number, a: number };
 	hash( base?: number ): string;
-	distance( image1: Jimp | Buffer, image2: Jimp | Buffer ): number;
-	diff( image1: Jimp | Buffer, image2: Jimp | Buffer, threshold: number ): { image: Buffer, percent: number };
+	clone(): Jimp;
 
-	bitmap: JimpBitmap;
+	/* Resize */
+	contain( width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes ): void;
+	cover( width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes ): void;
+	resize( width: number, height: number, mode?: JimpResizeModes ): void;
+	scale( factor: number, mode?: JimpResizeModes ): void;
+	scaleToFit( width: number, height: number, mode?: JimpResizeModes );
+	color( params: JimpColorParams[] ): void;
+
+	/* Crop */
+	autocrop(): void;
+	crop( x: number, y: number, width: number, height: number ): void;
+
+	/* Composing */
+	blit( src: Jimp | Buffer, x: number, y: number, srcx?: number, srcy?: number, srcw?: number, srch?: number ): void;
+	composite( src: Jimp | Buffer, x: number, y: number ): void;
+	mask( src: Jimp | Buffer, x: number, y: number ): void;
+
+	/* Flip and rotate */
+	flip( horz: boolean, vert: boolean ): void;
+	mirror( horz: boolean, vert: boolean ): void;
+	rotate( deg: number, mode?: JimpResizeModes ): void;
+
+	/* Colour */
+	brightness( val: number ): void;
+	contrast( val: number ): void;
+	dither565(): void;
+	greyscale(): void;
+	invert(): void;
+	normalize(): void;
+
+	/* Alpha channel */
+	fade( factor: number ): void;
+	opacity( factor: number ): void;
+	opaque(): void;
+	background( hex: number ): void;
+
+	/* Blurs */
+	gaussian( rad: number ): void;
+	blur( rad: number ): void;
+
+	/* Effects */
+	posterize( level: number ): void;
+	sepia(): void;
+};
+
+export type GJimp = JimpLike & {
 	glitch?: Glitch;
+};
 
+export type JimpLike = {
 	/* Constants */
 	AUTO: -1;
 	RESIZE_NEAREST_NEIGHBOR: 'nearestNeighbor';
@@ -96,51 +152,13 @@ export type GJimp = {
 	PNG_FILTER_AVERAGE: 3;
 	PNG_FILTER_PAETH: 4;
 
-	/* Resize */
-	contain( width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes ): void;
-	cover( width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes ): void;
-	resize( width: number, height: number, mode?: JimpResizeModes ): void;
-	scale( factor: number, mode?: JimpResizeModes ): void;
-	scaleToFit( width: number, height: number, mode?: JimpResizeModes );
+	read( file: string, callback?: ( error: string, image: Jimp ) => void ): Promise<Jimp>;
+	deflateStrategy( value: number ): void;
+	rgbaToInt( r: number, g: number, b: number, a: number ): number;
+	intToRGBA( hex: number ): { r: number, g: number, b: number, a: number };
+	distance( image1: Jimp | Buffer, image2: Jimp | Buffer ): number;
+	diff( image1: Jimp | Buffer, image2: Jimp | Buffer, threshold: number ): { image: Buffer, percent: number };
 
-	/* Crop */
-	autocrop(): void;
-	crop( x: number, y: number, width: number, height: number ): void;
-
-	/* Composing */
-	blit( src: Jimp | Buffer, x: number, y: number, srcx?: number, srcy?: number, srcw?: number, srch?: number ): void;
-	composite( src: Jimp | Buffer, x: number, y: number ): void;
-	mask( src: Jimp | Buffer, x: number, y: number ): void;
-
-	/* Flip and rotate */
-	flip( horz: boolean, vert: boolean ): void;
-	mirror( horz: boolean, vert: boolean ): void;
-	rotate( deg: number, mode?: JimpResizeModes ): void;
-
-	/* Colour */
-	brightness( val: number ): void;
-	contrast( val: number ): void;
-	dither565(): void;
-	greyscale(): void;
-	invert(): void;
-	normalize(): void;
-	color( params: JimpColorParams[] ): void;
-
-	/* Alpha channel */
-	fade( factor: number ): void;
-	opacity( factor: number ): void;
-	opaque(): void;
-	background( hex: number ): void;
-
-	/* Blurs */
-	gaussian( rad: number ): void;
-	blur( rad: number ): void;
-
-	/* Effects */
-	posterize( level: number ): void;
-	sepia(): void;
-
-	/* Text */
 	/* tslint:disable:no-any */
 	loadFont( path: string ): Promise<any>;
 	/* tslint:enable:no-any */
@@ -156,7 +174,7 @@ export type JimpResizeModes =
 export type JimpMarixTuple = [ number, number, number ];
 export type JimpMatrix = [ JimpMarixTuple, JimpMarixTuple, JimpMarixTuple ];
 
-export type JimpBitmap = {
+export type JimpImageBitmap = {
 	data: Buffer;
 	width: number;
 	height: number;

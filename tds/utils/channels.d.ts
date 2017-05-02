@@ -1,7 +1,8 @@
-import * as Jimp from 'jimp';
+import { Glitch, GlitchColumn } from '../config/types';
+export declare type RgbKeys = 'r' | 'g' | 'b';
 export default class Channels {
-    static getChannel(target: any, key: any): any;
-    static mapChannel(arr: any, key: string): any;
-    static defineChannels(target: Jimp): void;
-    static deleteChannels(target: Jimp): void;
+    static getChannel(glitch: Glitch, key: RgbKeys): number[];
+    static mapChannel(arr: GlitchColumn[], key: RgbKeys): number[][];
+    static defineChannels(glitch: Glitch): void;
+    static deleteChannels(glitch: Glitch): void;
 }

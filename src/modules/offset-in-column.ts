@@ -1,25 +1,34 @@
-import { each, random, isUndefined, isNumber, isFunction, isString, isArray } from 'lodash';
+import { each, random, isNil, isNumber, isFunction, isString, isArray } from 'lodash';
 import Jimp from 'jimp';
 import Utils from './utils';
 import Columns from './columns';
+import {
+	Glitch,
+	GlitchColumn
+} from '../config/types';
+import { RgbKeys } from '../utils/channels';
+import { Parameter } from '../utils/parameters';
+import { GlitchPixel } from '../modules/pixel';
 
-export default function OffsetInColumns( image: Jimp, keys, offset ) {
+export type OffsetFuction = ( glitch: Glitch, index: number ) => number;
 
-	if ( isUndefined( image ) ) {
+export default function OffsetInColumns( glitch: Glitch, keys: RgbKeys, offset: void | OffsetFuction | Parameter ) {
+
+	if ( isNil( glitch ) ) {
 		console.log( 'Image is not defined in Offset.module.' );
 	}
 
 	let offsetValue;
-	let baseValue = image.bitmap.height;
+	let baseValue = glitch.image.bitmap.height;
 
 	if ( isNumber( offset ) ) {
-		offset = ~~( Math.round( offset ) );
+		offset = ~~( Math.round( <number>offset ) );
 		if ( offset > baseValue || offset < -baseValue ) {
-			offsetValue = offset % baseValue;
+			offsetValue = <number>offset % baseValue;
 		} else {
 			offsetValue = offset;
 		}
-	} else if ( isUndefined( offset ) ) {
+	} else if ( isNil( offset ) ) {
 		offsetValue = random( baseValue );
 	}
 
@@ -27,33 +36,36 @@ export default function OffsetInColumns( image: Jimp, keys, offset ) {
 		console.log( 'Offsetting ' + keys + ' in columns by ' + offsetValue + ' pixels...' );
 	}
 
-	if ( isUndefined( keys ) ) {
-		return image;
+	if ( isNil( keys ) ) {
+		return glitch;
 	}
 
+	let _keys: RgbKeys[] = [];
+
 	if ( isString( keys ) ) {
-		keys = [ keys ];
+		_keys = [ keys ];
 	} else if ( !isArray( keys ) ) {
-		return image;
+		return glitch;
 	}
 
 	let columns = [];
-	each( image.glitch.columns, function ( column, colIndex ) {
+
+	each( glitch.columns, ( column: GlitchColumn, colIndex: number ) => {
 		columns[ colIndex ] = [];
 
 		if ( isFunction( offset ) ) {
-			offsetValue = offset( image, colIndex );
+			offsetValue = ( offset as OffsetFuction )( glitch, colIndex );
 		}
 
-		each( column, function ( pixel, index ) {
+		each( column, ( pixel: GlitchPixel, index: number ) => {
 			let pixelOffset = Utils.getPixelOffset( index, offsetValue, baseValue );
 			columns[ colIndex ][ index ] = pixel;
 
-			each( keys, k => {
-				columns[ colIndex ][ index ][ k ] = Utils.getChannel( image, k )[ colIndex ][ pixelOffset ];
+			each( keys, ( k: RgbKeys ) => {
+				columns[ colIndex ][ index ][ k ] = Utils.getChannel( glitch, k )[ colIndex ][ pixelOffset ];
 			} );
 		} );
 	} );
 
-	return Columns( image, columns );
+	return Columns( glitch, columns );
 }

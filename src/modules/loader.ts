@@ -1,32 +1,35 @@
-import { each, isUndefined, isNull } from 'lodash';
+import { isNil } from 'lodash';
 import Process from './process';
 import * as Promise from 'bluebird';
 import * as Jimp from 'jimp';
+import { LayerConfig, JimpLike, JimpImage, Glimage, GJimp } from '../config/types';
 
-export default function Loader( layer ) {
+export default function Loader( layer: LayerConfig ): Promise<Glimage> {
 
-	if ( isUndefined( layer ) || isUndefined( layer.file ) ) {
+	if ( isNil( layer ) || isNil( layer.file ) ) {
 		return;
 	}
 
-	return Jimp.read( layer.file ).then( image => {
-		let mime;
+	const jimp = Jimp as JimpLike;
+
+	return jimp.read( layer.file ).then(( image: JimpImage ) => {
 		const ext = layer.file.substr( -4, 4 );
+		let mime: string;
 
 		try {
 			if ( ext === '.jpg' || ext === 'jpeg' ) {
-				mime = Jimp.MIME_JPEG;
+				mime = jimp.MIME_JPEG;
 			} else if ( ext === '.png' ) {
-				mime = Jimp.MIME_PNG;
+				mime = jimp.MIME_PNG;
 			} else if ( ext === '.bmp' ) {
-				mime = Jimp.MIME_BMP;
+				mime = jimp.MIME_BMP;
 			}
 
-			image.bitmap.mime = mime;
+			( image as Glimage ).bitmap.mime = mime;
 		} catch ( e ) {
-			throw `File type not supported - ${ext}`;
+			throw `File type not supported - ${ext}. Error: ${e}`;
 		}
 
-		return Process( image, layer.effects );
+		return Process( image as Glimage, layer.effects );
 	} ).catch( error => console.error );
 }

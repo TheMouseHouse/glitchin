@@ -1,1 +1,2 @@
-export default function ColumnsToData(image: any): any;
+import { GlitchColumn } from '../config/types';
+export default function ColumnsToData(columns: GlitchColumn[]): any;

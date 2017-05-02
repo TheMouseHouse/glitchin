@@ -1,6 +1,3 @@
-import * as Jimp from 'jimp';
-export default function OffsetRgbCols(image: Jimp, offset: {
-    r?: number;
-    g?: number;
-    b?: number;
-}): any;
+import { Parameter } from '../utils/parameters';
+import { Glitch } from '../config/types';
+export default function OffsetRgbCols(glitch: Glitch, offset: Parameter): Glitch;

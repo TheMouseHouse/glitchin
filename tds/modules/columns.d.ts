@@ -1,2 +1,2 @@
-import * as Jimp from 'jimp';
-export default function Columns(image: Jimp, columns: any): any;
+import { Glitch, GlitchColumn } from '../config/types';
+export default function Columns(glitch: Glitch, columns: GlitchColumn[]): Glitch;

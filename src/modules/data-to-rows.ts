@@ -1,15 +1,20 @@
-import { isUndefined } from 'lodash';
+import { isNil } from 'lodash';
 import * as Jimp from 'jimp';
+import {
+	Glitch,
+	GlitchRow
+} from '../config/types';
+import { GlitchPixel } from '../modules/pixel';
 
-export default function DataToRows( image: Jimp ) {
-	const width = image.glitch.width;
+export default function DataToRows( glitch: Glitch ): GlitchRow[] {
+	const width = glitch.width;
 	let yIndex = 0;
-	let rows = [];
+	let rows: GlitchRow[] = [];
 
-	for ( let i = 0; i < image.glitch.data.length; i++ ) {
-		const pixel = image.glitch.data[ i ];
+	for ( let i = 0; i < glitch.data.length; i++ ) {
+		const pixel: GlitchPixel = glitch.data[ i ];
 
-		if ( isUndefined( rows[ yIndex ] ) ) {
+		if ( isNil( rows[ yIndex ] ) ) {
 			rows[ yIndex ] = [];
 		}
 

@@ -2,28 +2,33 @@ import { each, set, includes } from 'lodash';
 import Constants from '../config/constants';
 import Utils from '../modules/utils';
 import OffsetInColumn from '../modules/offset-in-column';
+import { RgbKeys } from '../utils/channels';
 import * as Jimp from 'jimp';
+import { Parameter } from '../utils/parameters';
+import {
+	Glitch
+} from '../config/types';
 
-export default function OffsetRgbCols( image: Jimp, offset: { r?: number, g?: number, b?: number } ) {
+export default function OffsetRgbCols( glitch: Glitch, offset: Parameter ): Glitch {
 	if ( !Utils.hasRgbParameter( offset ) ) {
 		offset = Utils.createRgbParameters();
 	}
 
 	try {
-		Utils.defineChannels( image );
+		Utils.defineChannels( glitch );
 
-		each( offset, ( value: number, key: string ) => {
-			set( image[ Constants.CHANNELS ], key, Utils.mapChannel( image.glitch.columns, key ) );
+		each( offset, ( value: number, key: RgbKeys ) => {
+			set( glitch[ Constants.CHANNELS ], key, Utils.mapChannel( glitch.columns, key ) );
 
 			if ( includes( Constants.POSSIBLE_CHANNELS, key ) ) {
-				image = OffsetInColumn( image, key, value );
+				glitch = OffsetInColumn( glitch, key, value );
 			}
 		} );
 
-		Utils.deleteChannels( image );
+		Utils.deleteChannels( glitch );
 	} catch ( e ) {
 		console.log( 'Error offsetting columns. Attempting to continue. ' + e );
 	}
 
-	return image;
+	return glitch;
 }

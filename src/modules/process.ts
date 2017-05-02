@@ -1,20 +1,25 @@
-import { each, isUndefined, isNil } from 'lodash';
+import { each, isNil } from 'lodash';
 import Pixel from './pixel';
 import OffsetRgbCols from '../filters/offset-columns';
 import * as Promise from 'bluebird';
 import * as Jimp from 'jimp';
+import {
+	Glimage,
+	Glitch,
+	Effects
+} from '../config/types';
 
-export default function Process( image, effects ) {
+export default function Process( glimage: Glimage, effects: Effects ): Glimage {
 
-	return new Promise(( resolve, reject ) => {
-		if ( isNil( image ) ) { reject(); }
+	return new Promise(( resolve: ( glimage: Glimage ) => void, reject: () => void ) => {
+		if ( isNil( glimage ) ) { reject(); }
 
-		const data = image.bitmap.data;
-		const width = image.bitmap.width;
-		const height = image.bitmap.height;
+		const data = glimage.bitmap.data;
+		const width = glimage.bitmap.width;
+		const height = glimage.bitmap.height;
 
-		let glitch = {
-			image: image,
+		let glitch: Glitch = {
+			image: glimage,
 			data: [],
 			rows: [],
 			columns: [],
@@ -22,15 +27,15 @@ export default function Process( image, effects ) {
 			height: height
 		};
 
-		image.scan( 0, 0, width, height, ( x, y, idx ) => {
-			let pixel = Pixel( x, y, idx, data );
+		glimage.scan( 0, 0, width, height, ( x: number, y: number, idx: number ) => {
+			const pixel = Pixel( x, y, idx, data );
 			glitch.data.push( pixel );
 
-			if ( isUndefined( glitch.rows[ y ] ) ) {
+			if ( isNil( glitch.rows[ y ] ) ) {
 				glitch.rows[ y ] = [];
 			}
 
-			if ( isUndefined( glitch.columns[ x ] ) ) {
+			if ( isNil( glitch.columns[ x ] ) ) {
 				glitch.columns[ x ] = [];
 			}
 
@@ -40,24 +45,24 @@ export default function Process( image, effects ) {
 
 
 
-		if ( !isUndefined( effects ) && effects.length > 0 ) {
+		if ( !isNil( effects ) && effects.length > 0 ) {
 			console.log( 'Applying effects...' );
-			image.glitch = glitch;
+			glimage.glitch = glitch;
 
 			each( effects, effect => {
 				console.log( effect );
 
 				switch ( String( effect.type ).toLowerCase() ) {
 					case 'offsetrgbcols':
-						image.glitch = OffsetRgbCols( image.glitch, effect.params );
+						glimage.glitch = OffsetRgbCols( glimage.glitch, effect.params );
 						break;
 				}
 			} );
 		} else {
-			image.glitch = image;
+			glimage.getBuffer( glimage.bitmap.mime, ( buffer: Buffer ) => glimage.bitmap.data = buffer );
 		}
 
-		resolve( image );
+		resolve( glimage );
 	} ).catch( error => console.error );
 
 }
