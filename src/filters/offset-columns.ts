@@ -4,7 +4,7 @@ import Utils from '../modules/utils';
 import OffsetInColumn from '../modules/offset-in-column';
 import * as Jimp from 'jimp';
 
-export default function OffsetRgbCols( image: Jimp, offset ) {
+export default function OffsetRgbCols( image: Jimp, offset: { r?: number, g?: number, b?: number } ) {
 	if ( !Utils.hasRgbParameter( offset ) ) {
 		offset = Utils.createRgbParameters();
 	}
@@ -12,7 +12,7 @@ export default function OffsetRgbCols( image: Jimp, offset ) {
 	try {
 		Utils.defineChannels( image );
 
-		each( offset, ( value, key ) => {
+		each( offset, ( value: number, key: string ) => {
 			set( image[ Constants.CHANNELS ], key, Utils.mapChannel( image.glitch.columns, key ) );
 
 			if ( includes( Constants.POSSIBLE_CHANNELS, key ) ) {
@@ -26,4 +26,4 @@ export default function OffsetRgbCols( image: Jimp, offset ) {
 	}
 
 	return image;
-};
+}

@@ -13,7 +13,7 @@ export default function DataToRows( image: Jimp ) {
 			rows[ yIndex ] = [];
 		}
 
-		rows[ yIndex ].push( pixel )
+		rows[ yIndex ].push( pixel );
 
 		if ( i % width === 0 && i !== 0 ) {
 			yIndex++;
@@ -21,4 +21,4 @@ export default function DataToRows( image: Jimp ) {
 	}
 
 	return rows;
-};
+}

@@ -1,20 +1,22 @@
-import { find, isUndefined, isNumber, random, size, each, sampleSize, has } from 'lodash';
+import { find, isNil, isNumber, random, size, each, sampleSize, has } from 'lodash';
 import Constants from '../config/constants';
+
+export type Parameter = { r?: number, g?: number, b?: number };
 
 export default class Parameters {
 
-	static createRgbParameters( range?: any ): any {
+	static createRgbParameters( range?: number ): Parameter {
 		console.log( 'Creating random parameters...' );
 
 		let possibleParameters = Constants.POSSIBLE_CHANNELS,
-			randomRange = ( isUndefined( range ) || !isNumber( range ) ) ? random( 100 ) : random( range ),
+			randomRange = ( isNil( range ) || !isNumber( range ) ) ? random( 100 ) : random( range ),
 			offset = {};
 
-		if ( isUndefined( offset ) || size( offset ) < 1 ) {
+		if ( isNil( offset ) || size( offset ) < 1 ) {
 			let sampleLength = random( possibleParameters.length - 1 );
 
 			if ( sampleLength <= 0 ) {
-				sampleLength = 1
+				sampleLength = 1;
 			}
 
 			each( sampleSize( possibleParameters, sampleLength ), parameter => {
@@ -25,13 +27,7 @@ export default class Parameters {
 		return offset;
 	}
 
-	static hasRgbParameter( offset?: any ): boolean {
-		for ( let p in Constants.POSSIBLE_CHANNELS ) {
-			if ( has( offset, Constants.POSSIBLE_CHANNELS[ p ] ) ) {
-				return true;
-			}
-		}
-
-		return false;
+	static hasRgbParameter( offset?: Parameter ): boolean {
+		return !isNil( offset ) && ( !isNil( offset.r ) || !isNil( offset.g ) || !isNil( offset.b ) );
 	}
 }

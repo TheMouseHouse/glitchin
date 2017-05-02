@@ -24,7 +24,7 @@ export default function OffsetInColumns( image: Jimp, keys, offset ) {
 	}
 
 	if ( !isFunction( offset ) ) {
-		console.log( 'Offsetting ' + keys + ' in columns by ' + offsetValue + 'pixels...' );
+		console.log( 'Offsetting ' + keys + ' in columns by ' + offsetValue + ' pixels...' );
 	}
 
 	if ( isUndefined( keys ) ) {
@@ -37,7 +37,7 @@ export default function OffsetInColumns( image: Jimp, keys, offset ) {
 		return image;
 	}
 
-	var columns = [];
+	let columns = [];
 	each( image.glitch.columns, function ( column, colIndex ) {
 		columns[ colIndex ] = [];
 
@@ -46,7 +46,7 @@ export default function OffsetInColumns( image: Jimp, keys, offset ) {
 		}
 
 		each( column, function ( pixel, index ) {
-			var pixelOffset = Utils.getPixelOffset( index, offsetValue, baseValue );
+			let pixelOffset = Utils.getPixelOffset( index, offsetValue, baseValue );
 			columns[ colIndex ][ index ] = pixel;
 
 			each( keys, k => {
@@ -56,4 +56,4 @@ export default function OffsetInColumns( image: Jimp, keys, offset ) {
 	} );
 
 	return Columns( image, columns );
-};
+}

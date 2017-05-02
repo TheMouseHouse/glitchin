@@ -29,4 +29,4 @@ export default function Loader( layer ) {
 
 		return Process( image, layer.effects );
 	} ).catch( error => console.error );
-};
+}

@@ -19,7 +19,9 @@
   "directories": {},
   "scripts": {
     "build": "set NODE_ENV=production&& rimraf lib && tsc -w",
-    "dev": "set NODE_ENV=development&& rimraf lib && tsc -w"
+    "dev": "set NODE_ENV=development&& rimraf lib && tsc -w",
+    "lint": "tslint --force './src/**/*.ts'",
+    "test": "mocha -b --recursive"
   },
   "author": {
     "name": "Piotr Skonieczny",
@@ -41,6 +43,10 @@
     "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "typescript": "^2.2.1"
+    "@types/node": "^7.0.15",
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0",
+    "tslint": "^5.1.0",
+    "typescript": "^2.3.2"
   }
 }

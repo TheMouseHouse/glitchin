@@ -1,0 +1,136 @@
+/// <reference types="node" />
+import * as Jimp from 'jimp';
+import { GlitchPixel } from '../modules/pixel';
+export declare type Effect = {
+    type: 'offsetRgbCols';
+    params: {
+        r?: number;
+        g?: number;
+        b?: number;
+        func?: Function;
+    };
+};
+export declare type Effects = Effect[];
+export declare type LayerConfig = {
+    file: string;
+    opacity?: number;
+    effects?: Effects;
+};
+export declare type OutputConfig = {
+    output: string;
+};
+export declare type Layer = {
+    params: LayerConfig;
+    jimp: Jimp;
+};
+export declare type Layers = Layer[];
+export declare type GlitchRow = GlitchPixel[];
+export declare type GlitchColumn = GlitchPixel[];
+export declare type Glitch = {
+    data: GlitchPixel[];
+    row: GlitchRow[];
+    columns: GlitchColumn[];
+};
+export declare type GJimp = {
+    read(file: string, callback?: (error: string, image: Jimp) => void): Promise<Jimp>;
+    write(path: string, callback?: (error: string) => void): void;
+    scan(x: number, y: number, width: number, height: number, callback: (x: number, y: number, idx: number) => void): void;
+    getBuffer(mime, callback: (image: Buffer) => void): void;
+    getBase64(mime, callback: (base64: string) => void): void;
+    clone(): Jimp;
+    convolution(matrix: JimpMatrix): void;
+    quality(n: number): void;
+    rgba(bool: boolean): void;
+    filterType(value: number): void;
+    deflateLevel(value: number): void;
+    deflateStrategy(value: number): void;
+    getPixelColor(x: number, y: number): number;
+    setPixelColor(hex: number, x: number, y: number): void;
+    rgbaToInt(r: number, g: number, b: number, a: number): number;
+    intToRGBA(hex: number): {
+        r: number;
+        g: number;
+        b: number;
+        a: number;
+    };
+    hash(base?: number): string;
+    distance(image1: Jimp | Buffer, image2: Jimp | Buffer): number;
+    diff(image1: Jimp | Buffer, image2: Jimp | Buffer, threshold: number): {
+        image: Buffer;
+        percent: number;
+    };
+    bitmap: JimpBitmap;
+    glitch?: Glitch;
+    AUTO: -1;
+    RESIZE_NEAREST_NEIGHBOR: 'nearestNeighbor';
+    RESIZE_BILINEAR: 'bilinearInterpolation';
+    RESIZE_BICUBIC: 'bicubicInterpolation';
+    RESIZE_HERMITE: 'hermiteInterpolation';
+    RESIZE_BEZIER: 'bezierInterpolation';
+    HORIZONTAL_ALIGN_LEFT: 1;
+    HORIZONTAL_ALIGN_CENTER: 2;
+    HORIZONTAL_ALIGN_RIGHT: 4;
+    VERTICAL_ALIGN_TOP: 8;
+    VERTICAL_ALIGN_MIDDLE: 16;
+    VERTICAL_ALIGN_BOTTOM: 32;
+    FONT_SANS_8_BLACK: string;
+    FONT_SANS_16_BLACK: string;
+    FONT_SANS_32_BLACK: string;
+    FONT_SANS_64_BLACK: string;
+    FONT_SANS_128_BLACK: string;
+    FONT_SANS_8_WHITE: string;
+    FONT_SANS_16_WHITE: string;
+    FONT_SANS_32_WHITE: string;
+    FONT_SANS_64_WHITE: string;
+    FONT_SANS_128_WHITE: string;
+    MIME_PNG: 'image/png';
+    MIME_JPEG: 'image/jpeg';
+    MIME_BMP: 'image/bmp';
+    PNG_FILTER_AUTO: -1;
+    PNG_FILTER_NONE: 0;
+    PNG_FILTER_SUB: 1;
+    PNG_FILTER_UP: 2;
+    PNG_FILTER_AVERAGE: 3;
+    PNG_FILTER_PAETH: 4;
+    contain(width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes): void;
+    cover(width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes): void;
+    resize(width: number, height: number, mode?: JimpResizeModes): void;
+    scale(factor: number, mode?: JimpResizeModes): void;
+    scaleToFit(width: number, height: number, mode?: JimpResizeModes);
+    autocrop(): void;
+    crop(x: number, y: number, width: number, height: number): void;
+    blit(src: Jimp | Buffer, x: number, y: number, srcx?: number, srcy?: number, srcw?: number, srch?: number): void;
+    composite(src: Jimp | Buffer, x: number, y: number): void;
+    mask(src: Jimp | Buffer, x: number, y: number): void;
+    flip(horz: boolean, vert: boolean): void;
+    mirror(horz: boolean, vert: boolean): void;
+    rotate(deg: number, mode?: JimpResizeModes): void;
+    brightness(val: number): void;
+    contrast(val: number): void;
+    dither565(): void;
+    greyscale(): void;
+    invert(): void;
+    normalize(): void;
+    color(params: JimpColorParams[]): void;
+    fade(factor: number): void;
+    opacity(factor: number): void;
+    opaque(): void;
+    background(hex: number): void;
+    gaussian(rad: number): void;
+    blur(rad: number): void;
+    posterize(level: number): void;
+    sepia(): void;
+    loadFont(path: string): Promise<any>;
+};
+export declare type JimpResizeModes = Jimp.RESIZE_NEAREST_NEIGHBOR | Jimp.RESIZE_BILINEAR | Jimp.RESIZE_BICUBIC | Jimp.RESIZE_HERMITE | Jimp.RESIZE_BEZIER;
+export declare type JimpMarixTuple = [number, number, number];
+export declare type JimpMatrix = [JimpMarixTuple, JimpMarixTuple, JimpMarixTuple];
+export declare type JimpBitmap = {
+    data: Buffer;
+    width: number;
+    height: number;
+};
+export declare type JimpColorParams = {
+    apply: 'lighten' | 'brighten' | 'darken' | 'desaturate' | 'saturate' | 'greyscale' | 'spin' | 'hue' | 'mix' | 'tint' | 'shade' | 'xor' | 'red' | 'green' | 'blue';
+    params: string[] | number[];
+};

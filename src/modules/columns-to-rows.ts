@@ -14,4 +14,4 @@ export default function ColumnsToData( image: Jimp ): any[] {
 	} );
 
 	return rows;
-};
+}

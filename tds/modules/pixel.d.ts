@@ -1,4 +1,4 @@
-export default function Pixel(x: number, y: number, idx: number, data: number[]): {
+export declare type GlitchPixel = {
     x: number;
     y: number;
     idx: number;
@@ -8,3 +8,4 @@ export default function Pixel(x: number, y: number, idx: number, data: number[])
     a: number;
     hex: number;
 };
+export default function Pixel(x: number, y: number, idx: number, data: number[]): GlitchPixel;

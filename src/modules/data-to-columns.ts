@@ -17,4 +17,4 @@ export default function DataToColumns( image: Jimp ) {
 	}
 
 	return columns;
-};
+}

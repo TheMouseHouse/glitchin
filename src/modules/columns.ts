@@ -16,4 +16,4 @@ export default function Columns( image: Jimp, columns ) {
 	image.glitch.rows = DataToRows( image );
 
 	return image;
-};
+}
