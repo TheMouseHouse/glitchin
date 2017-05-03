@@ -1,1 +1,2 @@
-export default function Render(image: any, output: any): any;
+import { Glimage } from '../config/types';
+export default function Render(glimage: Glimage, output: string): any;

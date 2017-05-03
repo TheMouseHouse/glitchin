@@ -2,7 +2,13 @@ import { isNil } from 'lodash';
 import Process from './process';
 import * as Promise from 'bluebird';
 import * as Jimp from 'jimp';
-import { LayerConfig, JimpLike, JimpImage, Glimage, GJimp } from '../config/types';
+import {
+	LayerConfig,
+	JimpLike,
+	JimpImage,
+	Glimage,
+	GJimp
+} from '../config/types';
 
 export default function Loader( layer: LayerConfig ): Promise<Glimage> {
 

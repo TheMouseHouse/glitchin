@@ -57,7 +57,7 @@ export type JimpImage = {
 
 	scan( x: number, y: number, width: number, height: number, callback: ( x: number, y: number, idx: number ) => void ): void;
 	write( path: string, callback?: ( error: string ) => void ): void;
-	getBuffer( mime, callback: ( image: Buffer ) => void ): void;
+	getBuffer( mime, callback: ( err: string, image: Buffer ) => void ): void;
 	getBase64( mime, callback: ( base64: string ) => void ): void;
 	quality( n: number ): void;
 	rgba( bool: boolean ): void;

@@ -18,7 +18,7 @@ export default function OffsetInColumns( glitch: Glitch, keys: RgbKeys, offset: 
 		console.log( 'Image is not defined in Offset.module.' );
 	}
 
-	let offsetValue;
+	let offsetValue: number | OffsetFuction | Parameter;
 	let baseValue = glitch.image.bitmap.height;
 
 	if ( isNumber( offset ) ) {
@@ -58,7 +58,7 @@ export default function OffsetInColumns( glitch: Glitch, keys: RgbKeys, offset: 
 		}
 
 		each( column, ( pixel: GlitchPixel, index: number ) => {
-			let pixelOffset = Utils.getPixelOffset( index, offsetValue, baseValue );
+			let pixelOffset = Utils.getPixelOffset( index, <number>offsetValue, baseValue );
 			columns[ colIndex ][ index ] = pixel;
 
 			each( keys, ( k: RgbKeys ) => {

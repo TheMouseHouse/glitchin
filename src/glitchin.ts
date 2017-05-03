@@ -53,9 +53,8 @@ export class Glitchin {
 				each( this._layers.reverse(), ( layer: Layer ) => {
 					if ( layer.params.opacity > 0 ) {
 						let glimage = layer.glimage;
-						let layerGlitchData = glimage.glitch && glimage.glitch.data;
 
-						if ( !!layerGlitchData ) {
+						if ( !!glimage.glitch && !!glimage.glitch.data ) {
 							let index = 0;
 
 							glimage.scan(
@@ -64,13 +63,11 @@ export class Glitchin {
 								glimage.bitmap.height,
 
 								function ( x: number, y: number, idx: number ) {
-									const pixel = layerGlitchData[ index ];
-									let layerBitmapData = ( this.bitmap as GlimageBitmap ).data;
-
-									layerBitmapData[ idx + 0 ] = pixel.r;
-									layerBitmapData[ idx + 1 ] = pixel.g;
-									layerBitmapData[ idx + 2 ] = pixel.b;
-									layerBitmapData[ idx + 3 ] = pixel.a;
+									const pixel = glimage.glitch.data[ index ];
+									this.bitmap.data[ idx + 0 ] = pixel.r;
+									this.bitmap.data[ idx + 1 ] = pixel.g;
+									this.bitmap.data[ idx + 2 ] = pixel.b;
+									this.bitmap.data[ idx + 3 ] = pixel.a;
 								}
 							);
 						}
@@ -80,7 +77,7 @@ export class Glitchin {
 					}
 				} );
 
-				Render( image, outputConfig.output );
+				Render( <Glimage>image, outputConfig.output );
 			} );
 		} );
 	}

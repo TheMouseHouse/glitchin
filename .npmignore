@@ -1,5 +1,9 @@
 logs
 *.log
-src
+npm-debug.log*
+node_modules
 .idea
 .vscode
+src
+tsconfig.json
+tslint.json

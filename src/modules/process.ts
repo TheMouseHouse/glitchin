@@ -58,8 +58,6 @@ export default function Process( glimage: Glimage, effects: Effects ): Glimage {
 						break;
 				}
 			} );
-		} else {
-			glimage.getBuffer( glimage.bitmap.mime, ( buffer: Buffer ) => glimage.bitmap.data = buffer );
 		}
 
 		resolve( glimage );
