@@ -2,7 +2,7 @@ import { each, set, includes } from 'lodash';
 import Constants from '../config/constants';
 import Utils from '../modules/utils';
 import OffsetInColumn from '../modules/offset-in-column';
-import { RgbKeys } from '../utils/channels';
+import { RgbaKeys } from '../utils/channels';
 import * as Jimp from 'jimp';
 import { Parameter } from '../utils/parameters';
 import {
@@ -17,14 +17,14 @@ export default function OffsetRgbCols( glitch: Glitch, offset: Parameter ): Glit
 	try {
 		Utils.defineChannels( glitch );
 
-		each( offset, ( value: number, key: RgbKeys ) => {
+		each( offset, ( value: number, key: RgbaKeys ) => {
 			set( glitch[ Constants.CHANNELS ], key, Utils.mapChannel( glitch.columns, key ) );
 
 			if ( includes( Constants.POSSIBLE_CHANNELS, key ) ) {
 				glitch = OffsetInColumn( glitch, key, value );
 			}
 		} );
-
+		console.info( 'channels', glitch.channels );
 		Utils.deleteChannels( glitch );
 	} catch ( e ) {
 		console.log( 'Error offsetting columns. Attempting to continue. ' + e );

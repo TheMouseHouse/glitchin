@@ -34,6 +34,21 @@ export class Glitchin {
 				new Promise(( resolve: () => void, reject: ( error: string ) => void ) => {
 					Loader( layer ).then(( glimage: Glimage ) => {
 						this._layers[ index ] = { params: layer, glimage: glimage };
+
+						// Mocks
+						// console.log(
+						// 	layer.file,
+						// 	JSON.stringify(
+						// 		{
+						// 			data: glimage.glitch.data,
+						// 			columns: glimage.glitch.columns,
+						// 			rows: glimage.glitch.rows,
+						// 			height: glimage.glitch.height,
+						// 			width: glimage.glitch.width
+						// 		}
+						// 	)
+						// );
+
 						resolve();
 					} ).catch(( error: string ) => {
 						console.error( error );

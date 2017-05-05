@@ -6,13 +6,13 @@ import {
 	Glitch,
 	GlitchColumn
 } from '../config/types';
-import { RgbKeys } from '../utils/channels';
+import { RgbaKeys } from '../utils/channels';
 import { Parameter } from '../utils/parameters';
 import { GlitchPixel } from '../modules/pixel';
 
 export type OffsetFuction = ( glitch: Glitch, index: number ) => number;
 
-export default function OffsetInColumns( glitch: Glitch, keys: RgbKeys, offset: void | OffsetFuction | Parameter ) {
+export default function OffsetInColumns( glitch: Glitch, keys: RgbaKeys, offset: void | OffsetFuction | Parameter ) {
 
 	if ( isNil( glitch ) ) {
 		console.log( 'Image is not defined in Offset.module.' );
@@ -40,7 +40,7 @@ export default function OffsetInColumns( glitch: Glitch, keys: RgbKeys, offset: 
 		return glitch;
 	}
 
-	let _keys: RgbKeys[] = [];
+	let _keys: RgbaKeys[] = [];
 
 	if ( isString( keys ) ) {
 		_keys = [ keys ];
@@ -61,7 +61,7 @@ export default function OffsetInColumns( glitch: Glitch, keys: RgbKeys, offset: 
 			let pixelOffset = Utils.getPixelOffset( index, <number>offsetValue, baseValue );
 			columns[ colIndex ][ index ] = pixel;
 
-			each( keys, ( k: RgbKeys ) => {
+			each( keys, ( k: RgbaKeys ) => {
 				columns[ colIndex ][ index ][ k ] = Utils.getChannel( glitch, k )[ colIndex ][ pixelOffset ];
 			} );
 		} );

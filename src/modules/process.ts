@@ -43,11 +43,10 @@ export default function Process( glimage: Glimage, effects: Effects ): Glimage {
 			glitch.columns[ x ].push( pixel );
 		} );
 
-
+		glimage.glitch = glitch;
 
 		if ( !isNil( effects ) && effects.length > 0 ) {
 			console.log( 'Applying effects...' );
-			glimage.glitch = glitch;
 
 			each( effects, effect => {
 				console.log( effect );

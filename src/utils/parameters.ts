@@ -1,7 +1,7 @@
 import { find, isNil, isNumber, random, size, each, sampleSize, has } from 'lodash';
 import Constants from '../config/constants';
 
-export type Parameter = { r?: number, g?: number, b?: number };
+export type Parameter = { r?: number, g?: number, b?: number, a?: number };
 
 export default class Parameters {
 
@@ -28,6 +28,6 @@ export default class Parameters {
 	}
 
 	static hasRgbParameter( offset?: Parameter ): boolean {
-		return !isNil( offset ) && ( !isNil( offset.r ) || !isNil( offset.g ) || !isNil( offset.b ) );
+		return !isNil( offset ) && ( !isNil( offset.r ) || !isNil( offset.g ) || !isNil( offset.b ) || !isNil( offset.a ) );
 	}
 }

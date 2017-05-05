@@ -7,36 +7,48 @@ import {
 	GlitchColumn
 } from '../config/types';
 
-export type RgbKeys = 'r' | 'g' | 'b';
+export type RgbaKeys = 'r' | 'g' | 'b' | 'a';
 
 export default class Channels {
 
-	static getChannel( glitch: Glitch, key: RgbKeys ): number[] {
+	static getChannel( glitch: Glitch, channel: RgbaKeys ): number[] {
+		const message = {
+			method: 'Channels#getChannel()',
+			glitch: '- Glitch undefined',
+			channel: '- Unable to get channel from glitch: channel undefined or not "r", "g", "b" nor "a"... Was:',
+			tail: 'Returning empty array []'
+		};
+
 		if ( isNil( glitch ) ) {
-			console.error( 'Unable to get channel from target: target undefined.' );
+			console.error( message.method, message.glitch, message.tail );
 			return [];
 		}
-		if ( isNil( key ) ) {
-			console.error( 'Unable to get channel from target: key undefined.' );
+		if ( isNil( channel ) || Constants.POSSIBLE_CHANNELS.indexOf( channel ) === -1 ) {
+			console.error( message.method, message.channel, channel, '.', message.tail );
 			return [];
 		}
 
-		return glitch[ Constants.CHANNELS ][ key ];
+		return glitch[ Constants.CHANNELS ][ channel ];
 	}
 
-	static mapChannel( arr: GlitchColumn[], key: RgbKeys ): number[][] {
+	static mapChannel( arr: GlitchColumn[], channel: RgbaKeys ): number[][] {
+		if ( Constants.POSSIBLE_CHANNELS.indexOf( channel ) === -1 ) {
+			return [];
+		}
 		return map( arr, ( column: GlitchColumn ) => {
 			return map( column, ( pixel: GlitchPixel ) => {
-				return pixel[ key ];
+				return pixel[ channel ];
 			} );
 		} );
 	}
 
 	static defineChannels( glitch: Glitch ): void {
+		if ( isNil( glitch ) ) { return; }
 		set( glitch, Constants.CHANNELS, {} );
 	}
 
 	static deleteChannels( glitch: Glitch ): void {
+		if ( isNil( glitch ) ) { return; }
 		unset( glitch, Constants.CHANNELS );
 	}
 }
