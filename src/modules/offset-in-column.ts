@@ -58,7 +58,7 @@ export default function OffsetInColumns( glitch: Glitch, keys: RgbaKeys, offset:
 		}
 
 		each( column, ( pixel: GlitchPixel, index: number ) => {
-			let pixelOffset = Utils.getPixelOffset( index, <number>offsetValue, baseValue );
+			let pixelOffset = Utils.getIndexOffset( index, <number>offsetValue, baseValue );
 			columns[ colIndex ][ index ] = pixel;
 
 			each( keys, ( k: RgbaKeys ) => {

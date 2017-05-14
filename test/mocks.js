@@ -1,3 +1,5 @@
+var _ = require( 'lodash' );
+
 var glitch = {
 	"data": [
 		{
@@ -303,5 +305,37 @@ var sample = {
 	row: [ glitch.data[ 0 ], glitch.data[ 1 ], glitch.data[ 2 ] ]
 };
 
+
 exports.glitch = glitch;
 exports.sample = sample;
+
+function offsetData( index, offset, size ) {
+	actualIndex = index + ( offset % size );
+
+	if ( actualIndex < 0 ) {
+		actualIndex += size;
+	}
+
+	if ( actualIndex >= size ) {
+		actualIndex -= size;
+	}
+
+	return { index: index, offset: offset, size: size, expected: actualIndex }
+}
+
+function randomSize() {
+	return Math.ceil( Math.random() * 20 ) + 10;
+}
+
+var size = randomSize();
+var width = randomSize();
+var indexOffsets = [];
+
+_.times( size, i => {
+	_.times( width, o => {
+		indexOffsets.push( offsetData( i, o, size ) );
+		indexOffsets.push( offsetData( i, -o, size ) );
+	} );
+} );
+
+exports.indexOffsets = indexOffsets;

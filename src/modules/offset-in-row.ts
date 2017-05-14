@@ -41,7 +41,7 @@ export default function OffsetInRows( image: Jimp, keys, offset ) {
 		}
 
 		each( row, function ( pixel, index ) {
-			const pixelOffset = Utils.getPixelOffset( index, offsetValue, baseValue );
+			const pixelOffset = Utils.getIndexOffset( index, offsetValue, baseValue );
 			rows[ rowIndex ][ index ] = pixel;
 
 			each( keys, k => {

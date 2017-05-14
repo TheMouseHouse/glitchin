@@ -7,5 +7,5 @@ export default class Utils {
     static mapChannel: typeof Channels.mapChannel;
     static hasRgbParameter: typeof Parameters.hasRgbParameter;
     static createRgbParameters: typeof Parameters.createRgbParameters;
-    static getPixelOffset(index: number, offsetValue: number, baseValue: number): number;
+    static getIndexOffset(index: number, offset: number, size: number): number;
 }

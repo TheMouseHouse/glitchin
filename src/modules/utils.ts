@@ -1,3 +1,4 @@
+import { isNil } from 'lodash';
 import Channels from '../utils/channels';
 import Parameters from '../utils/parameters';
 
@@ -9,17 +10,21 @@ export default class Utils {
 	static hasRgbParameter = Parameters.hasRgbParameter;
 	static createRgbParameters = Parameters.createRgbParameters;
 
-	static getPixelOffset( index: number, offsetValue: number, baseValue: number ): number {
-		let pixelOffset = -offsetValue + index;
-
-		if ( pixelOffset >= baseValue ) {
-			pixelOffset -= baseValue;
+	static getIndexOffset( index: number, offset: number, size: number ): number {
+		if ( isNil( index ) || isNil( offset ) || isNil( size ) || size === 0 ) {
+			return 0;
 		}
 
-		if ( pixelOffset < 0 ) {
-			pixelOffset += baseValue;
+		let actualIndex = index + ( offset % size );
+
+		if ( actualIndex < 0 ) {
+			actualIndex += size;
 		}
 
-		return pixelOffset;
+		if ( actualIndex >= size ) {
+			actualIndex -= size;
+		}
+
+		return actualIndex;
 	}
 }
