@@ -1,6 +1,7 @@
 import { each, isNil } from 'lodash';
 import Pixel from './pixel';
-import OffsetRgbCols from '../filters/offset-columns';
+import OffsetRgbCols from '../effects/offset-columns';
+import EffectProvider from './effect-provider';
 import * as Promise from 'bluebird';
 import * as Jimp from 'jimp';
 import {
@@ -46,16 +47,11 @@ export default function Process( image: Jimp, mime: string, effects: Effects ): 
 
 			each( effects, effect => {
 				console.log( effect );
-
-				switch ( String( effect.type ).toLowerCase() ) {
-					case 'offsetrgbcols':
-						glitch = OffsetRgbCols( glitch, effect.params );
-						break;
-				}
+				glitch = EffectProvider( effect, glitch );
 			} );
 		}
 
 		resolve( glitch );
-	} ).catch( error => console.error );
+	} );
 
 }
