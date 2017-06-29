@@ -1,2 +1,2 @@
-import { Glimage } from '../config/types';
-export default function Render(glimage: Glimage, output: string): any;
+import * as Jimp from 'jimp';
+export default function Render(image: Jimp, output: string): any;

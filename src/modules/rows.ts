@@ -1,9 +1,9 @@
 import { isUndefined, isNull } from 'lodash';
 import RowsToData from './rows-to-data';
 import DataToColumns from './data-to-columns';
-import * as Jimp from 'jimp';
+import { Glimage, GlitchRow } from '../config/types';
 
-export default function Rows( image: Jimp, rows: any[] ) {
+export default function Rows( image: Glimage, rows: GlitchRow[] ) {
 	if ( isUndefined( image ) || isNull( image ) ) {
 		throw new Error( 'modules/rows: image undefined' );
 	}

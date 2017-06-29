@@ -1,5 +1,7 @@
-import { each, isNil, has } from 'lodash';
+import { map, each, isNil, has } from 'lodash';
 import Loader from './modules/loader';
+import Assemble from './modules/assemble';
+import Composite from './modules/composite';
 import Render from './modules/render';
 import Pixel from './modules/pixel';
 import * as Promise from 'bluebird';
@@ -19,7 +21,6 @@ import {
 
 export class Glitchin {
 
-	private _promises: Promise<void>[] = [];
 	private _layers: Layers = [];
 
 	constructor( layerConfigs: LayerConfig[], outputConfig: OutputConfig ) {
@@ -27,28 +28,27 @@ export class Glitchin {
 			return;
 		}
 
+		Promise.all( this._mapPromises( layerConfigs ) )
+			.then(() => { return Assemble( this._layers ); } )
+			.then(( images: Jimp[] ) => { return Composite( images ); } )
+			.then(( image: Jimp ) => Render( image, outputConfig.output ) )
+			.catch( err => console.log( err ) );
+	}
+
+	private _setLayer( index: number, layer: Layer ) {
+		this._layers[ index ] = layer;
+	}
+
+	private _mapPromises( layerConfigs: LayerConfig[] ): Promise<Jimp>[] {
+		let promises = [];
+
 		each( layerConfigs, ( layer: LayerConfig, index: number ) => {
 			console.log( 'Loading', layer.file, layer );
 
-			this._promises.push(
+			promises.push(
 				new Promise(( resolve: () => void, reject: ( error: string ) => void ) => {
-					Loader( layer ).then(( glimage: Glimage ) => {
-						this._layers[ index ] = { params: layer, glimage: glimage };
-
-						// Mocks
-						// console.log(
-						// 	layer.file,
-						// 	JSON.stringify(
-						// 		{
-						// 			data: glimage.glitch.data,
-						// 			columns: glimage.glitch.columns,
-						// 			rows: glimage.glitch.rows,
-						// 			height: glimage.glitch.height,
-						// 			width: glimage.glitch.width
-						// 		}
-						// 	)
-						// );
-
+					Loader( layer ).then(( glitch: Glitch ) => {
+						this._setLayer( index, { params: layer, glitch: glitch } );
 						resolve();
 					} ).catch(( error: string ) => {
 						console.error( error );
@@ -56,44 +56,9 @@ export class Glitchin {
 					} );
 				} )
 			);
+
 		} );
 
-		Promise.all( this._promises ).then(() => {
-			console.log( 'Compositing...' );
-
-			let bitmap = this._layers[ 0 ].glimage.bitmap;
-			let output = new Jimp( bitmap.width, bitmap.height, ( error: string, image: JimpImage ) => {
-				if ( !isNil( error ) ) { return; }
-
-				each( this._layers.reverse(), ( layer: Layer ) => {
-					if ( layer.params.opacity > 0 ) {
-						let glimage = layer.glimage;
-
-						if ( !!glimage.glitch && !!glimage.glitch.data ) {
-							let index = 0;
-
-							glimage.scan(
-								0, 0,
-								glimage.bitmap.width,
-								glimage.bitmap.height,
-
-								function ( x: number, y: number, idx: number ) {
-									const pixel = glimage.glitch.data[ index ];
-									this.bitmap.data[ idx + 0 ] = pixel.r;
-									this.bitmap.data[ idx + 1 ] = pixel.g;
-									this.bitmap.data[ idx + 2 ] = pixel.b;
-									this.bitmap.data[ idx + 3 ] = pixel.a;
-								}
-							);
-						}
-
-						glimage.opacity( layer.params.opacity / 100 );
-						image.composite( glimage, 0, 0 );
-					}
-				} );
-
-				Render( <Glimage>image, outputConfig.output );
-			} );
-		} );
+		return promises;
 	}
 }

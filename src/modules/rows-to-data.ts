@@ -1,6 +1,6 @@
 import { flatten } from 'lodash';
-import * as Jimp from 'jimp';
+import { Glimage } from '../config/types';
 
-export default function RowsToData( image: Jimp ) {
+export default function RowsToData( image: Glimage ) {
 	return flatten( image.glitch.rows );
 }

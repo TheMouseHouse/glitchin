@@ -35,8 +35,8 @@ export default class Channels {
 		if ( Constants.POSSIBLE_CHANNELS.indexOf( channel ) === -1 ) {
 			return [];
 		}
-		return map( arr, ( column: GlitchColumn ) => {
-			return map( column, ( pixel: GlitchPixel ) => {
+		return map( arr, column => {
+			return map( column, pixel => {
 				return pixel[ channel ];
 			} );
 		} );

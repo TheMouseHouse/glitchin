@@ -1,2 +1,2 @@
-import * as Jimp from 'jimp';
-export default function DataToColumns(image: Jimp): any[];
+import { Glimage } from '../config/types';
+export default function DataToColumns(image: Glimage): any[];

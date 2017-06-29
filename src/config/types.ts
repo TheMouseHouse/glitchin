@@ -25,7 +25,7 @@ export type OutputConfig = {
 
 export type Layer = {
 	params: LayerConfig,
-	glimage: Glimage
+	glitch: Glitch
 };
 
 export type Layers = Layer[];
@@ -34,10 +34,10 @@ export type GlitchRow = GlitchPixel[];
 export type GlitchColumn = GlitchPixel[];
 
 export type Glitch = {
-	image: Glimage;
 	data: GlitchPixel[];
 	rows: GlitchRow[];
 	columns: GlitchColumn[];
+	mime: string;
 	width: number;
 	height: number;
 	channels?: { r: number[], g: number[], b: number[] };
@@ -70,11 +70,11 @@ export type JimpImage = {
 	clone(): Jimp;
 
 	/* Resize */
-	contain( width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes ): void;
-	cover( width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes ): void;
-	resize( width: number, height: number, mode?: JimpResizeModes ): void;
-	scale( factor: number, mode?: JimpResizeModes ): void;
-	scaleToFit( width: number, height: number, mode?: JimpResizeModes );
+	contain( width: number, height: number, alignBits?: boolean, mode?: string ): void;
+	cover( width: number, height: number, alignBits?: boolean, mode?: string ): void;
+	resize( width: number, height: number, mode?: string ): void;
+	scale( factor: number, mode?: string ): void;
+	scaleToFit( width: number, height: number, mode?: string );
 	color( params: JimpColorParams[] ): void;
 
 	/* Crop */
@@ -89,7 +89,7 @@ export type JimpImage = {
 	/* Flip and rotate */
 	flip( horz: boolean, vert: boolean ): void;
 	mirror( horz: boolean, vert: boolean ): void;
-	rotate( deg: number, mode?: JimpResizeModes ): void;
+	rotate( deg: number, mode?: string ): void;
 
 	/* Colour */
 	brightness( val: number ): void;
@@ -164,15 +164,8 @@ export type JimpLike = {
 	/* tslint:enable:no-any */
 };
 
-export type JimpResizeModes =
-	Jimp.RESIZE_NEAREST_NEIGHBOR |
-	Jimp.RESIZE_BILINEAR |
-	Jimp.RESIZE_BICUBIC |
-	Jimp.RESIZE_HERMITE |
-	Jimp.RESIZE_BEZIER;
-
-export type JimpMarixTuple = [ number, number, number ];
-export type JimpMatrix = [ JimpMarixTuple, JimpMarixTuple, JimpMarixTuple ];
+export type JimpMatrixTuple = [ number, number, number ];
+export type JimpMatrix = [ JimpMatrixTuple, JimpMatrixTuple, JimpMatrixTuple ];
 
 export type JimpImageBitmap = {
 	data: Buffer;

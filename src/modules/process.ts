@@ -4,30 +4,28 @@ import OffsetRgbCols from '../filters/offset-columns';
 import * as Promise from 'bluebird';
 import * as Jimp from 'jimp';
 import {
-	Glimage,
 	Glitch,
 	Effects
 } from '../config/types';
 
-export default function Process( glimage: Glimage, effects: Effects ): Glimage {
+export default function Process( image: Jimp, mime: string, effects: Effects ): Promise<Glitch> {
+	return new Promise(( resolve: ( glitch: Glitch ) => void, reject: () => void ) => {
+		if ( isNil( image ) ) { reject(); }
 
-	return new Promise(( resolve: ( glimage: Glimage ) => void, reject: () => void ) => {
-		if ( isNil( glimage ) ) { reject(); }
-
-		const data = glimage.bitmap.data;
-		const width = glimage.bitmap.width;
-		const height = glimage.bitmap.height;
+		const data = image.bitmap.data;
+		const width = image.bitmap.width;
+		const height = image.bitmap.height;
 
 		let glitch: Glitch = {
-			image: glimage,
 			data: [],
 			rows: [],
 			columns: [],
+			mime: mime,
 			width: width,
 			height: height
 		};
 
-		glimage.scan( 0, 0, width, height, ( x: number, y: number, idx: number ) => {
+		image.scan( 0, 0, width, height, ( x: number, y: number, idx: number ) => {
 			const pixel = Pixel( x, y, idx, data );
 			glitch.data.push( pixel );
 
@@ -43,8 +41,6 @@ export default function Process( glimage: Glimage, effects: Effects ): Glimage {
 			glitch.columns[ x ].push( pixel );
 		} );
 
-		glimage.glitch = glitch;
-
 		if ( !isNil( effects ) && effects.length > 0 ) {
 			console.log( 'Applying effects...' );
 
@@ -53,13 +49,13 @@ export default function Process( glimage: Glimage, effects: Effects ): Glimage {
 
 				switch ( String( effect.type ).toLowerCase() ) {
 					case 'offsetrgbcols':
-						glimage.glitch = OffsetRgbCols( glimage.glitch, effect.params );
+						glitch = OffsetRgbCols( glitch, effect.params );
 						break;
 				}
 			} );
 		}
 
-		resolve( glimage );
+		resolve( glitch );
 	} ).catch( error => console.error );
 
 }

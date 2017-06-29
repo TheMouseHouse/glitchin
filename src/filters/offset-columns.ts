@@ -24,7 +24,7 @@ export default function OffsetRgbCols( glitch: Glitch, offset: Parameter ): Glit
 				glitch = OffsetInColumn( glitch, key, value );
 			}
 		} );
-		console.info( 'channels', glitch.channels );
+
 		Utils.deleteChannels( glitch );
 	} catch ( e ) {
 		console.log( 'Error offsetting columns. Attempting to continue. ' + e );

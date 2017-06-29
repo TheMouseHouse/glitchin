@@ -1,5 +1,5 @@
 import { each, random, isNil, isNumber, isFunction, isString, isArray } from 'lodash';
-import Jimp from 'jimp';
+import * as Jimp from 'jimp';
 import Utils from './utils';
 import Columns from './columns';
 import {
@@ -12,14 +12,14 @@ import { GlitchPixel } from '../modules/pixel';
 
 export type OffsetFuction = ( glitch: Glitch, index: number ) => number;
 
-export default function OffsetInColumns( glitch: Glitch, keys: RgbaKeys, offset: void | OffsetFuction | Parameter ) {
+export default function OffsetInColumns( glitch: Glitch, keys: RgbaKeys, offset?: OffsetFuction | Parameter ) {
 
 	if ( isNil( glitch ) ) {
 		console.log( 'Image is not defined in Offset.module.' );
 	}
 
 	let offsetValue: number | OffsetFuction | Parameter;
-	let baseValue = glitch.image.bitmap.height;
+	let baseValue = glitch.height;
 
 	if ( isNumber( offset ) ) {
 		offset = ~~( Math.round( <number>offset ) );

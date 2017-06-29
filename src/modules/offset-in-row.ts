@@ -2,8 +2,9 @@ import { each, random, isUndefined, isNumber, isFunction, isString, isArray } fr
 import * as Jimp from 'jimp';
 import Utils from './utils';
 import Rows from './rows';
+import { Glimage } from '../config/types';
 
-export default function OffsetInRows( image: Jimp, keys, offset ) {
+export default function OffsetInRows( image: Glimage, keys, offset ) {
 	if ( isUndefined( image ) ) {
 		console.log( 'Image is not defined in Offset.module.' );
 	}
@@ -45,7 +46,7 @@ export default function OffsetInRows( image: Jimp, keys, offset ) {
 			rows[ rowIndex ][ index ] = pixel;
 
 			each( keys, k => {
-				rows[ rowIndex ][ index ][ k ] = Utils.getChannel( image, k )[ rowIndex ][ pixelOffset ];
+				rows[ rowIndex ][ index ][ k ] = Utils.getChannel( image.glitch, k )[ rowIndex ][ pixelOffset ];
 			} );
 		} );
 	} );

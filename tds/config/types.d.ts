@@ -21,16 +21,16 @@ export declare type OutputConfig = {
 };
 export declare type Layer = {
     params: LayerConfig;
-    glimage: Glimage;
+    glitch: Glitch;
 };
 export declare type Layers = Layer[];
 export declare type GlitchRow = GlitchPixel[];
 export declare type GlitchColumn = GlitchPixel[];
 export declare type Glitch = {
-    image: Glimage;
     data: GlitchPixel[];
     rows: GlitchRow[];
     columns: GlitchColumn[];
+    mime: string;
     width: number;
     height: number;
     channels?: {
@@ -61,11 +61,11 @@ export declare type JimpImage = {
     setPixelColor(hex: number, x: number, y: number): void;
     hash(base?: number): string;
     clone(): Jimp;
-    contain(width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes): void;
-    cover(width: number, height: number, alignBits?: boolean, mode?: JimpResizeModes): void;
-    resize(width: number, height: number, mode?: JimpResizeModes): void;
-    scale(factor: number, mode?: JimpResizeModes): void;
-    scaleToFit(width: number, height: number, mode?: JimpResizeModes);
+    contain(width: number, height: number, alignBits?: boolean, mode?: string): void;
+    cover(width: number, height: number, alignBits?: boolean, mode?: string): void;
+    resize(width: number, height: number, mode?: string): void;
+    scale(factor: number, mode?: string): void;
+    scaleToFit(width: number, height: number, mode?: string);
     color(params: JimpColorParams[]): void;
     autocrop(): void;
     crop(x: number, y: number, width: number, height: number): void;
@@ -74,7 +74,7 @@ export declare type JimpImage = {
     mask(src: Jimp | Buffer, x: number, y: number): void;
     flip(horz: boolean, vert: boolean): void;
     mirror(horz: boolean, vert: boolean): void;
-    rotate(deg: number, mode?: JimpResizeModes): void;
+    rotate(deg: number, mode?: string): void;
     brightness(val: number): void;
     contrast(val: number): void;
     dither565(): void;
@@ -141,9 +141,8 @@ export declare type JimpLike = {
     };
     loadFont(path: string): Promise<any>;
 };
-export declare type JimpResizeModes = Jimp.RESIZE_NEAREST_NEIGHBOR | Jimp.RESIZE_BILINEAR | Jimp.RESIZE_BICUBIC | Jimp.RESIZE_HERMITE | Jimp.RESIZE_BEZIER;
-export declare type JimpMarixTuple = [number, number, number];
-export declare type JimpMatrix = [JimpMarixTuple, JimpMarixTuple, JimpMarixTuple];
+export declare type JimpMatrixTuple = [number, number, number];
+export declare type JimpMatrix = [JimpMatrixTuple, JimpMatrixTuple, JimpMatrixTuple];
 export declare type JimpImageBitmap = {
     data: Buffer;
     width: number;

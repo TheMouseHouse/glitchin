@@ -1,7 +1,7 @@
 import { isUndefined } from 'lodash';
-import * as Jimp from 'jimp';
+import { Glimage } from '../config/types';
 
-export default function DataToColumns( image: Jimp ) {
+export default function DataToColumns( image: Glimage ) {
 	const width = image.glitch.width;
 	let columns = [];
 

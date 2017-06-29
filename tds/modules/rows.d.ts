@@ -1,2 +1,2 @@
-import * as Jimp from 'jimp';
-export default function Rows(image: Jimp, rows: any[]): any;
+import { Glimage, GlitchRow } from '../config/types';
+export default function Rows(image: Glimage, rows: GlitchRow[]): Glimage;
