@@ -1,5 +1,6 @@
 import { each, random, isNil, isNumber, isFunction, isString, isArray } from 'lodash';
 import * as Jimp from 'jimp';
+import Logger from '../utils/logger';
 import Utils from './utils';
 import Columns from './columns';
 import {
@@ -15,7 +16,7 @@ export type OffsetFuction = ( glitch: Glitch, index: number ) => number;
 export default function OffsetInColumns( glitch: Glitch, keys: RgbaKeys, offset?: OffsetFuction | Parameter ) {
 
 	if ( isNil( glitch ) ) {
-		console.log( 'Image is not defined in Offset.module.' );
+		Logger( 'log', 'Image is not defined in Offset.module.' );
 	}
 
 	let offsetValue: number | OffsetFuction | Parameter;
@@ -33,7 +34,7 @@ export default function OffsetInColumns( glitch: Glitch, keys: RgbaKeys, offset?
 	}
 
 	if ( !isFunction( offset ) ) {
-		console.log( 'Offsetting ' + keys + ' in columns by ' + offsetValue + ' pixels...' );
+		Logger( 'log', 'Offsetting ' + keys + ' in columns by ' + offsetValue + ' pixels...' );
 	}
 
 	if ( isNil( keys ) ) {

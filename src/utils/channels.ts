@@ -1,3 +1,4 @@
+import Logger from '../utils/logger';
 import Constants from '../config/constants';
 import { map, set, unset, isNil } from 'lodash';
 import * as Jimp from 'jimp';
@@ -20,11 +21,11 @@ export default class Channels {
 		};
 
 		if ( isNil( glitch ) ) {
-			console.error( message.method, message.glitch, message.tail );
+			Logger( 'error', message.method, message.glitch, message.tail );
 			return [];
 		}
 		if ( isNil( channel ) || Constants.POSSIBLE_CHANNELS.indexOf( channel ) === -1 ) {
-			console.error( message.method, message.channel, channel, '.', message.tail );
+			Logger( 'error', message.method, message.channel, channel, '.', message.tail );
 			return [];
 		}
 

@@ -1,4 +1,5 @@
 import { each, isNil, isArray } from 'lodash';
+import Logger from '../utils/logger';
 import * as Jimp from 'jimp';
 import * as Promise from 'bluebird';
 
@@ -7,7 +8,7 @@ export default function Composite( images: Jimp[] ): Promise<Jimp> {
 		throw new Error( 'modules/composite: No images' );
 	}
 
-	console.log( 'Compositing', images.length, 'images.' );
+	Logger( 'log', 'Compositing', images.length, 'images.' );
 
 	return new Promise(( resolve: ( image: Jimp ) => void, reject: ( err: Error ) => void ) => {
 		new Jimp( images[ 0 ].bitmap.width, images[ 0 ].bitmap.height, ( err: Error, image: Jimp ) => {

@@ -1,4 +1,5 @@
 import { each, isNil, isArray } from 'lodash';
+import Logger from '../utils/logger';
 import * as Jimp from 'jimp';
 import * as Promise from 'bluebird';
 import { Layer, Layers } from '../config/types';
@@ -7,7 +8,7 @@ export default function Assemble( layers: Layers ): Promise<Jimp[]> {
 		throw new Error( 'modules/composite: No images' );
 	}
 
-	console.log( 'Assembling...' );
+	Logger( 'log', 'Assembling...' );
 
 	return new Promise(( resolve: ( images: Jimp[] ) => void, reject: ( err: Error ) => void ) => {
 		let jimps: Jimp[] = [];

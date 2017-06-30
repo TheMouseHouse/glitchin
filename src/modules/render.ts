@@ -1,14 +1,15 @@
 import { each, has, isUndefined, isNil } from 'lodash';
 import * as  Promise from 'bluebird';
 import * as Jimp from 'jimp';
+import Logger from '../utils/logger';
 import { getMime } from '../modules/loader';
 
 export default function Render( image: Jimp, output: string ) {
-	console.log( 'Rendering...' );
+	Logger( 'log', 'Rendering...' );
 
 	if ( output !== 'base64' ) {
 		image.write( output );
-		console.log( 'Done.' );
+		Logger( 'log', 'Done.' );
 	} else {
 		return new Promise(( resolve: ( payload: string ) => void, reject: ( err: Error ) => void ) => {
 			if ( isNil( image ) ) {
@@ -24,6 +25,6 @@ export default function Render( image: Jimp, output: string ) {
 				buffer = null;
 				image = null;
 			} );
-		} ).catch( error => console.error );
+		} );
 	}
 }

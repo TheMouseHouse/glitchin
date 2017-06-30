@@ -1,4 +1,5 @@
 import { map, each, isNil, has } from 'lodash';
+import Logger from './utils/logger';
 import Loader from './modules/loader';
 import Assemble from './modules/assemble';
 import Composite from './modules/composite';
@@ -32,7 +33,7 @@ export class Glitchin {
 			.then(() => { return Assemble( this._layers ); } )
 			.then(( images: Jimp[] ) => { return Composite( images ); } )
 			.then(( image: Jimp ) => Render( image, outputConfig.output ) )
-			.catch( err => console.log( err ) );
+			.catch( err => Logger( 'error', err ) );
 	}
 
 	private _setLayer( index: number, layer: Layer ) {
@@ -43,7 +44,7 @@ export class Glitchin {
 		let promises = [];
 
 		each( layerConfigs, ( layer: LayerConfig, index: number ) => {
-			console.log( 'Loading', layer.file, layer );
+			Logger( 'log', 'Loading', layer.file, layer );
 
 			promises.push(
 				new Promise(( resolve: () => void, reject: ( error: string ) => void ) => {
@@ -51,7 +52,7 @@ export class Glitchin {
 						this._setLayer( index, { params: layer, glitch: glitch } );
 						resolve();
 					} ).catch(( error: string ) => {
-						console.error( error );
+						Logger( 'error', error );
 						reject( error );
 					} );
 				} )

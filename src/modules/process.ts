@@ -1,4 +1,5 @@
 import { each, isNil } from 'lodash';
+import Logger from '../utils/logger';
 import Pixel from './pixel';
 import OffsetRgbCols from '../effects/offset-columns';
 import EffectProvider from './effect-provider';
@@ -43,10 +44,10 @@ export default function Process( image: Jimp, mime: string, effects: Effects ): 
 		} );
 
 		if ( !isNil( effects ) && effects.length > 0 ) {
-			console.log( 'Applying effects...' );
+			Logger( 'log', 'Applying effects...' );
 
 			each( effects, effect => {
-				console.log( effect );
+				Logger( 'log', effect );
 				glitch = EffectProvider( effect, glitch );
 			} );
 		}
